@@ -330,27 +330,6 @@ public class Freecam {
     public static boolean isPlayerControlEnabled() {
         return playerControlEnabled;
     }
-
-    @ApiStatus.Experimental
-    @ApiStatus.AvailableSince("1.2.4")
-    public static boolean isRestrictedOnServer() {
-        ServerData server = MC.getCurrentServer();
-        ModConfig.ServerRestriction mode = ModConfig.INSTANCE.servers.mode;
-        if (mode == ModConfig.ServerRestriction.NONE || server == null || MC.hasSingleplayerServer()) {
-            return false;
-        }
-
-        String ip = server.ip.trim().toLowerCase();
-        return switch (mode) {
-            case WHITELIST -> ModConfig.INSTANCE.servers.whitelist.stream()
-                    .map(String::trim)
-                    .map(String::toLowerCase)
-                    .noneMatch(ip::equals);
-            case BLACKLIST -> ModConfig.INSTANCE.servers.blacklist.stream()
-                    .map(String::trim)
-                    .map(String::toLowerCase)
-                    .anyMatch(ip::equals);
-            default -> throw new IllegalStateException("Unexpected mode value in Freecam.isRestrictedOnServer: " + mode);
         };
     }
 }
